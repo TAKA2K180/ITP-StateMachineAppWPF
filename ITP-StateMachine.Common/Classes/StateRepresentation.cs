@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Stateless
+namespace Classes
 {
     public partial class StateMachine<TState, TTrigger>
     {
-        internal partial class StateRepresentation
+        public partial class StateRepresentation
         {
             readonly TState _state;
 

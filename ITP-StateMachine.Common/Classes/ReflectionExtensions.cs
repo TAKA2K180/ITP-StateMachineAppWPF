@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Reflection;
 
-namespace Stateless
+namespace Classes
 {
     internal static class ReflectionExtensions
     {

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Stateless
+namespace Classes
 {
     public partial class StateMachine<TState, TTrigger>
     {
@@ -12,7 +12,6 @@ namespace Stateless
         public partial class StateConfiguration
         {
             private readonly StateMachine<TState, TTrigger> _machine;
-            readonly StateRepresentation _representation;
             readonly Func<TState, StateRepresentation> _lookup;
 
             internal StateConfiguration(StateMachine<TState, TTrigger> machine, StateRepresentation representation, Func<TState, StateRepresentation> lookup)

@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Stateless
+namespace Classes
 {
     public partial class StateMachine<TState, TTrigger>
     {
-        internal class TransitionGuard
+        public class TransitionGuard
         {
             internal IList<GuardCondition> Conditions { get; }
 
@@ -57,14 +57,14 @@ namespace Stateless
 
             #endregion
 
-            internal TransitionGuard(Tuple<Func<bool>, string>[] guards)
+            public TransitionGuard(Tuple<Func<bool>, string>[] guards)
             {
                 Conditions = guards
                     .Select(g => new GuardCondition(g.Item1, Reflection.InvocationInfo.Create(g.Item1, g.Item2)))
                     .ToList();
             }
 
-            internal TransitionGuard(Func<bool> guard, string description = null)
+            public TransitionGuard(Func<bool> guard, string description = null)
             {
                 Conditions = new List<GuardCondition>
                 {
@@ -72,14 +72,14 @@ namespace Stateless
                 };
             }
 
-            internal TransitionGuard(Tuple<Func<object[], bool>, string>[] guards)
+            public TransitionGuard(Tuple<Func<object[], bool>, string>[] guards)
             {
                 Conditions = guards
                     .Select(g => new GuardCondition(g.Item1, Reflection.InvocationInfo.Create(g.Item1, g.Item2)))
                     .ToList();
             }
 
-            internal TransitionGuard(Func<object[], bool> guard, string description = null)
+            public TransitionGuard(Func<object[], bool> guard, string description = null)
             {
                 Conditions = new List<GuardCondition>
                 {
@@ -90,7 +90,7 @@ namespace Stateless
             /// <summary>
             /// Guards is the list of the guard functions for all guard conditions for this transition
             /// </summary>
-            internal ICollection<Func<object[], bool>> Guards => Conditions.Select(g => g.Guard).ToList();
+            public ICollection<Func<object[], bool>> Guards => Conditions.Select(g => g.Guard).ToList();
 
             /// <summary>
             /// GuardConditionsMet is true if all of the guard functions return true

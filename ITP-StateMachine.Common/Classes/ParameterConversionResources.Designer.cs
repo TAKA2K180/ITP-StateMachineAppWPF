@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Stateless {
+namespace Classes {
     
     /// <summary>
     ///   A strongly-typed resource class, for looking up localized strings, etc.
@@ -37,7 +37,7 @@ namespace Stateless {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Stateless.ParameterConversionResources", typeof(ParameterConversionResources).GetAssembly());
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("ITP_StateMachine.Common.Classes.ParameterConversionResources", typeof(ParameterConversionResources).GetAssembly());
                     resourceMan = temp;
                 }
                 return resourceMan;

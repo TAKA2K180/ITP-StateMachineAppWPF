@@ -1,13 +1,12 @@
-#if TASKS
 
 using System;
 using System.Threading.Tasks;
 
-namespace Stateless
+namespace Classes
 {
     public partial class StateMachine<TState, TTrigger>
     {
-        internal partial class StateRepresentation
+        public partial class StateRepresentation
         {
             public void AddActivateAction(Func<Task> action, Reflection.InvocationInfo activateActionDescription)
             {
@@ -137,5 +136,3 @@ namespace Stateless
         }
     }
 }
-
-#endif

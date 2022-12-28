@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Stateless.Reflection
+namespace Classes.Reflection
 {
     /// <summary>
     /// Describes a method - either an action (activate, deactivate, etc.) or a transition guard
@@ -22,7 +22,7 @@ namespace Stateless.Reflection
         }
         readonly Timing _timing;
 
-        internal static InvocationInfo Create(Delegate method, string description, Timing timing = Timing.Synchronous)
+        public static InvocationInfo Create(Delegate method, string description, Timing timing = Timing.Synchronous)
         {
             return new InvocationInfo(method?.TryGetMethodName(), description, timing);
         }

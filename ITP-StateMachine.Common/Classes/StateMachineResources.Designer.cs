@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Stateless {
+namespace Classes {
     using System;
     using System.Reflection;
     
@@ -38,7 +38,7 @@ namespace Stateless {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Stateless.StateMachineResources", typeof(StateMachineResources).GetAssembly());
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("ITP_StateMachine.Common.Classes.StateMachineResources", typeof(StateMachineResources).GetAssembly());
                     resourceMan = temp;
                 }
                 return resourceMan;

@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 
-using Stateless.Reflection;
+using Classes.Reflection;
 
-namespace Stateless.Graph
+namespace Classes.Graph
 {
     /// <summary>
     /// Used to keep track of transitions between states

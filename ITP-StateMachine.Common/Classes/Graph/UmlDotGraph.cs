@@ -1,6 +1,6 @@
-﻿using Stateless.Reflection;
+﻿using Classes.Reflection;
 
-namespace Stateless.Graph
+namespace Classes.Graph
 {
     /// <summary>
     /// Class to generate a DOT graph in UML format

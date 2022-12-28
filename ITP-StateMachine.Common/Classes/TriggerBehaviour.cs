@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Stateless
+namespace Classes
 {
     public partial class StateMachine<TState, TTrigger>
     {
-        internal abstract class TriggerBehaviour
+        public abstract class TriggerBehaviour
         {
             /// <summary>
             /// If there is no guard function, _guard is set to TransitionGuard.Empty
