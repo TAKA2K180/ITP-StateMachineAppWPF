@@ -1,8 +1,8 @@
-﻿namespace Stateless
+﻿namespace Classes
 {
     public partial class StateMachine<TState, TTrigger>
     {
-        internal class TransitioningTriggerBehaviour : TriggerBehaviour
+        public class TransitioningTriggerBehaviour : TriggerBehaviour
         {
             internal TState Destination { get; }
 

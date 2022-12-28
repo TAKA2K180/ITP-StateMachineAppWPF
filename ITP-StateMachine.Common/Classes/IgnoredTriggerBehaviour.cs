@@ -1,8 +1,8 @@
-﻿namespace Stateless
+﻿namespace Classes
 {
     public partial class StateMachine<TState, TTrigger>
     {
-        internal class IgnoredTriggerBehaviour : TriggerBehaviour
+        public class IgnoredTriggerBehaviour : TriggerBehaviour
         {
             public IgnoredTriggerBehaviour(TTrigger trigger, TransitionGuard transitionGuard)
                 : base(trigger, transitionGuard)

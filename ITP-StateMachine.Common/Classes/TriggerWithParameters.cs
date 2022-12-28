@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Stateless
+namespace Classes
 {
     partial class StateMachine<TState, TTrigger>
     {

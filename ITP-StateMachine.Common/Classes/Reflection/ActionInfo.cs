@@ -1,4 +1,4 @@
-﻿namespace Stateless.Reflection
+﻿namespace Classes.Reflection
 {
     /// <summary>
     /// Information on entry and exit actions

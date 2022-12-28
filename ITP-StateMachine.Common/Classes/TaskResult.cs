@@ -1,10 +1,10 @@
 ﻿using System.Threading.Tasks;
 
-namespace Stateless
+namespace Classes
 {
-    internal static class TaskResult
+    public static class TaskResult
     {
-        internal static readonly Task Done = FromResult(1);
+        public static readonly Task Done = FromResult(1);
 
         static Task<T> FromResult<T>(T value)
         {

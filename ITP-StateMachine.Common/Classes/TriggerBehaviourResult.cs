@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 
-namespace Stateless
+namespace Classes
 {
     public partial class StateMachine<TState, TTrigger>
     {
-        internal class TriggerBehaviourResult
+        public class TriggerBehaviourResult
         {
             public TriggerBehaviourResult(TriggerBehaviour handler, ICollection<string> unmetGuardConditions)
             {

@@ -1,9 +1,9 @@
-﻿using Stateless.Reflection;
+﻿using Classes.Reflection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Stateless
+namespace Classes
 {
     /// <summary>
     /// Enum for the different modes used when Fire-ing a trigger

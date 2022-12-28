@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Stateless
+namespace Classes
 {
     public partial class StateMachine<TState, TTrigger>
     {
@@ -21,7 +21,6 @@ namespace Stateless
                 _onTransitioned?.Invoke(transition);
             }
 
-#if TASKS
             public async Task InvokeAsync(Transition transition)
             {
                 _onTransitioned?.Invoke(transition);
@@ -29,7 +28,6 @@ namespace Stateless
                 foreach (var callback in _onTransitionedAsync)
                     await callback(transition).ConfigureAwait(false);
             }
-#endif
 
             public void Register(Action<Transition> action)
             {

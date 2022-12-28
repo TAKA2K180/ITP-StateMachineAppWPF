@@ -1,4 +1,4 @@
-﻿namespace Stateless.Reflection
+﻿namespace Classes.Reflection
 {
     /// <summary>
     /// Represents a trigger in a statemachine.

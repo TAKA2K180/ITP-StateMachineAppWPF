@@ -1,6 +1,6 @@
-﻿using Stateless.Reflection;
+﻿using Classes.Reflection;
 
-namespace Stateless.Graph
+namespace Classes.Graph
 {
     /// <summary>
     /// Used to keep track of the decision point of a dynamic transition
