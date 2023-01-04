@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,6 +13,11 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Xml.Linq;
+using ITP_StateMachine.Classes;
+using ITP_StateMachine.Common.Helpers;
+using ITP_StateMachine.Helpers;
+using ITP_StateMachine.ViewModels;
 
 namespace ITP_StateMachine
 {
@@ -20,9 +26,16 @@ namespace ITP_StateMachine
     /// </summary>
     public partial class MainWindow : Window
     {
-        public MainWindow()
+        MsmqHelper msmq = new MsmqHelper();
+        EventRecordManager events = new EventRecordManager();
+        
+        public MainWindow(string[] arg)
         {
+            msmq.SendCommandQueue($"Program initialize");
+            events.ReceiveCommand(null);
             InitializeComponent();
+            DataContext = new MainViewModel(null);
         }
+        
     }
 }
