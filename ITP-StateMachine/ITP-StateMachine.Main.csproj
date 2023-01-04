@@ -14,7 +14,19 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.0.0" />
+    <PackageReference Include="MahApps.Metro" Version="2.4.9" />
+    <PackageReference Include="MSMQ.Messaging" Version="1.0.4" />
+    <PackageReference Include="RabbitMQ" Version="3.6.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ITP-StateMachine.Common\ITP-StateMachine.Common.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="iTellerPlus.IDTechReader">
+      <HintPath>C:\DevOps\iTellerPlus\iTellerPlus.IDTechReader\iTellerPlus.IDTechReader\obj\Debug\iTellerPlus.IDTechReader.exe</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

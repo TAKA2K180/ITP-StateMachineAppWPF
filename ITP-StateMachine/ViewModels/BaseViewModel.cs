@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ITP_StateMachine.Models;
 
 namespace ITP_StateMachine.ViewModels
 {
-    internal class BaseViewModel
+    public class BaseViewModel : ObservableObjects
     {
     }
 }
