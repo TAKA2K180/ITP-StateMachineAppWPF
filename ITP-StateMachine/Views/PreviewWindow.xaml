@@ -4,10 +4,29 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ITP_StateMachine.Views"
-        xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
         mc:Ignorable="d"
-        Title="Card Preview" Height="450" Width="800">
+        Title="Preview Window" Background="#213038" Height="450" Width="800" FontFamily="Cascadia Mono" WindowStartupLocation="CenterScreen" Loaded="Window_Loaded" Closing="Window_Closing">
+   
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width=".5*"/>
+            <ColumnDefinition Width="3*"/>
+            <ColumnDefinition Width="3*"/>
+            <ColumnDefinition Width=".5*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="2*"/>
+            <RowDefinition Height="2.5*"/>
+            <RowDefinition Height="2.5*"/>
+            <RowDefinition Height="2*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Text="Card number:" Grid.Column="1" Grid.Row="1" FontSize="40" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White"/>
+        <TextBlock Text="Card ID:" Grid.Column="1" Grid.Row="2" FontSize="40" HorizontalAlignment="Right" Margin="0 0 40 0" VerticalAlignment="Center" Foreground="White"/>
+
+        <TextBox x:Name="txtCardNumber" Text="{Binding CardNumber}" FontSize="30" Grid.Row="1" Grid.Column="2" Margin="0 10 0 10" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Background="#213038" Foreground="White"/>
         
+        <TextBox x:Name="txtCardId" Text="{Binding CorpId}" FontSize="40" Grid.Row="2" Grid.Column="2" Margin="0 10 0 10" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Background="#213038" Foreground="White"/>
     </Grid>
 </Window>

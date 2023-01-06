@@ -4,56 +4,83 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using ITP_StateMachine.Common.Helpers;
 using ITP_StateMachine.Helpers;
+using iTellerPlus.IDTechReader;
+using System.Diagnostics;
+using ITP_StateMachine.Views;
+using ITP_StateMachine.IDTechReader;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.TaskbarClock;
+using System.Windows.Threading;
+using System.Windows.Media.Animation;
 
 namespace ITP_StateMachine.Classes
 {
     public class EventRecordManager
     {
+        #region Variables
+        TimeSpan time;
+        public static string[] arg;
         MsmqHelper msmq = new MsmqHelper();
-        
         DeviceWatcher device = new DeviceWatcher();
+        IDTechReader.CardReader card = new IDTechReader.CardReader(arg);
+        System.Windows.Threading.DispatcherTimer dispatcherTimer = new System.Windows.Threading.DispatcherTimer();
+        #endregion
+
+        #region Constructor
         public EventRecordManager()
         {
 
         }
+        #endregion
 
+        #region Methods
         public void ReceiveCommand(string CardNumber)
         {
             var message = msmq.ReceiveCommandQueue();
+
             if (message.Contains("Card swiped by user"))
             {
-                device.ApplicationWatcher("IDTech Encrypted", "iTellerPlus.IDTechReader.exe", "0ACD|0500", device.OutputHandler);
-                CardNumber = CardDetails.CardNumber;
-                if (CardNumber.Contains("3%"))
+                if (CardDetails.PrevCardNumber != CardDetails.CardNumber)
                 {
-                    string[] arr = CardNumber.ToString().Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
-                    CardDetails.CardNumber = Convert.ToString("Card Number:\n" + "0000000000" + arr[1].TrimStart('6', '0', '='));
-                    msmq.SendCommandQueue($"Card Number: {CardDetails.CardNumber}");
+                    if (WindowChecker.WindowCheck == false)
+                    {
+                        PreviewWindow preview = new PreviewWindow();
+                        preview.Show();
+                        WindowChecker.WindowCheck = true;
+                    }
                 }
-                else
-                {
-                    Console.WriteLine(CardNumber);
-                    CardDetails.CardNumber = CardNumber;
-                }
+                CardDetails.PrevCardNumber = CardDetails.CardNumber;
+                CardDetails.PrevCardId = CardDetails.CorpId;
             }
             else if (message.Contains("Card finished reading"))
             {
-                Thread.Sleep(10000);
-                msmq.SendTimerQueue("Timer start");
+
+            }
+            else if (message.Contains("Program exit"))
+            {
+
+            }
+        }
+
+        public void ReceiveHardwareQueue()
+         {
+            var message = msmq.ReceiveHardwareQueue().ToString();
+            if (message.Contains("Device online"))
+            {
+
+            }
+            else if (message.Contains("Device not detected"))
+            {
+
             }
             else if (message.Contains("Program initialize") || message.Contains("Device search initialize"))
             {
-                device.ApplicationWatcher("IDTech Encrypted", "iTellerPlus.IDTechReader.exe", "0ACD|0500", device.OutputHandler);
-
+                //device.ApplicationWatcher("IDTech Encrypted", "iTellerPlus.IDTechReader.exe", "0ACD|0500", OutputHandler);
+                card.SetStatus();
                 if (CardDetails.MachineState == false)
                 {
                     CardDetails.CardNumber = "Device not detected.";
                     msmq.SendHardwareQueue("Device not detected");
-                    //msmq.SendTimerQueue("Timer for device detection start");
-                    //Thread.Sleep(2000);
-                    //this.ReceiveTimerQueue(0, 10000);
                 }
                 else if (CardDetails.MachineState == true)
                 {
@@ -61,34 +88,13 @@ namespace ITP_StateMachine.Classes
                     msmq.SendHardwareQueue("Device online");
                 }
             }
-            else if (message.Contains("Program exit"))
-            {
-                device.ApplicationExit("IDTech Encrypted", "iTellerPlus.IDTechReader.exe", "0ACD|0500", device.OutputHandler);
-            }
-        }
-
-        public void ReceiveHardwareQueue()
-        {
-            var message = msmq.ReceiveHardwareQueue().ToString();
-            if (message.Contains("Device online"))
-            {
-                
-            }
-            else if (message.Contains("Device not detected"))
-            {
-                //
-            }
-            
         }
         public void ReceiveTimerQueue(int seconds, int millisecond)
         {
-            System.Windows.Threading.DispatcherTimer dispatcherTimer = new System.Windows.Threading.DispatcherTimer();
             var message = msmq.ReceiveTimerQueue();
             if (message.Contains("Timer start"))
             {
-                dispatcherTimer.Tick += dispatcherTimer_Tick;
-                dispatcherTimer.Interval = new TimeSpan(0, 0, seconds);
-                dispatcherTimer.Start();
+                //this.ReceiveCommand(null);
             }
             else if (message.Contains("Timer for device detection start"))
             {
@@ -96,10 +102,26 @@ namespace ITP_StateMachine.Classes
                 msmq.SendCommandQueue("Device search initialize");
                 this.ReceiveCommand(null);
             }
+            else if (message.Contains("Idle timer start"))
+            {
+                
+            }
         }
-        private void dispatcherTimer_Tick(object sender, EventArgs e)
-        {
 
+        public void TimerStop()
+        {
+            
         }
+
+        public void OutputHandler(object sendingProcess, DataReceivedEventArgs outLine)
+        {
+            EventRecordManager events = new EventRecordManager();
+            MsmqHelper msmq = new MsmqHelper();
+            var details = outLine.Data;
+            CardDetails.CardNumber = details;
+            msmq.SendCommandQueue("Card swiped by user");
+            events.ReceiveCommand(details);
+        } 
+        #endregion
     }
 }
