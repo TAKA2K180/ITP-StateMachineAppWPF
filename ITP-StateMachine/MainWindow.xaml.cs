@@ -15,7 +15,6 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Xml.Linq;
 using ITP_StateMachine.Classes;
-using ITP_StateMachine.Common.Helpers;
 using ITP_StateMachine.Helpers;
 using ITP_StateMachine.ViewModels;
 
@@ -26,15 +25,11 @@ namespace ITP_StateMachine
     /// </summary>
     public partial class MainWindow : Window
     {
-        MsmqHelper msmq = new MsmqHelper();
-        EventRecordManager events = new EventRecordManager();
-        
-        public MainWindow(string[] arg)
+        MainViewModel main = new MainViewModel();
+        public MainWindow()
         {
-            msmq.SendCommandQueue($"Program initialize");
-            events.ReceiveCommand(null);
             InitializeComponent();
-            DataContext = new MainViewModel(null);
+            DataContext = main;
         }
         
     }

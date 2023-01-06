@@ -41,10 +41,10 @@ namespace ITP_StateMachine.Helpers
             messageQueue.Label = "State Machine Timer Queue";
             messageQueue.Send(msg);
         }
+
         public string ReceiveCommandQueue()
         {
             string messagebody = default;
-            //note, you cannot use method exists on remote queues
 
             if (MessageQueue.Exists(".\\Private$\\StateMachineCommandQueue"))
             {
@@ -82,7 +82,6 @@ namespace ITP_StateMachine.Helpers
         public string ReceiveHardwareQueue()
         {
             string messagebody = default;
-            //note, you cannot use method exists on remote queues
 
             if (MessageQueue.Exists(".\\Private$\\statemachinehardwarequeue"))
             {
@@ -99,7 +98,7 @@ namespace ITP_StateMachine.Helpers
 
                 var messages = queue.GetAllMessages().FirstOrDefault();
                 var m = messages;
-                m.Formatter = new XmlMessageFormatter(new String[] { });
+                m.Formatter = new XmlMessageFormatter(new Type[] {typeof(MessageBody)});
 
                 StreamReader sr = new StreamReader(m.BodyStream);
 
@@ -121,7 +120,6 @@ namespace ITP_StateMachine.Helpers
         public string ReceiveTimerQueue()
         {
             string messagebody = default;
-            //note, you cannot use method exists on remote queues
 
             if (MessageQueue.Exists(".\\Private$\\statemachinetimerqueue"))
             {

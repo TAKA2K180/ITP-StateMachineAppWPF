@@ -6,12 +6,8 @@
     <RootNamespace>ITP_StateMachine</RootNamespace>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
+    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Folder Include="Views\" />
-    <Folder Include="ViewModels\" />
-  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="MahApps.Metro" Version="2.4.9" />
@@ -21,6 +17,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ITP-StateMachine.Common\ITP-StateMachine.Common.csproj" />
+    <ProjectReference Include="..\ITP-StateMachine.IDTechReader\ITP-StateMachine.IDTechReader.csproj" />
   </ItemGroup>
 
   <ItemGroup>
