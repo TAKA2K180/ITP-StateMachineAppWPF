@@ -74,14 +74,17 @@ namespace ITP_StateMachine.Views
             CardDetails.CardNumber = "";
 
             msmq.SendHardwareQueue("Device search initialize");
+            LogHelper.SendLogToText("Device search initialize");
             events.ReceiveHardwareQueue();
 
         }
         public void StartIdleTimer()
         {
             msmq.SendTimerQueue("Idle timer start");
+            LogHelper.SendLogToText("Idle timer start");
             events.ReceiveTimerQueue(15, 0);
             msmq.SendCommandQueue("Preview window closed");
+            LogHelper.SendLogToText("Preview window closed");
         }
     }
 }

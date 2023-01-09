@@ -22,7 +22,7 @@ namespace ITP_StateMachine.IDTechReader
         {
             Message msg = new Message();
             msg.Body = body;
-            MessageQueue messageQueue = new MessageQueue(".\\Private$\\StateMachineCommandQueue");
+            MessageQueue messageQueue = new MessageQueue(".\\Private$\\StateMachineHardwareQueue");
             messageQueue.Label = "State Machine Command Queue";
             messageQueue.Send(msg);
         }

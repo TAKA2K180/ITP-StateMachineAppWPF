@@ -81,11 +81,13 @@ namespace ITP_StateMachine.Classes
                 {
                     CardDetails.CardNumber = "Device not detected.";
                     msmq.SendHardwareQueue("Device not detected");
+                    LogHelper.SendLogToText("Device not detected");
                 }
                 else if (CardDetails.MachineState == true)
                 {
                     CardDetails.CardNumber = "Device online, please swipe your card.";
                     msmq.SendHardwareQueue("Device online");
+                    LogHelper.SendLogToText("Device online");
                 }
             }
         }
@@ -101,6 +103,7 @@ namespace ITP_StateMachine.Classes
                 Thread.Sleep(millisecond);
                 msmq.SendCommandQueue("Device search initialize");
                 this.ReceiveCommand(null);
+                LogHelper.SendLogToText("Device search initialize");
             }
             else if (message.Contains("Idle timer start"))
             {
@@ -121,6 +124,7 @@ namespace ITP_StateMachine.Classes
             CardDetails.CardNumber = details;
             msmq.SendCommandQueue("Card swiped by user");
             events.ReceiveCommand(details);
+            LogHelper.SendLogToText("Card swiped by user");
         } 
         #endregion
     }

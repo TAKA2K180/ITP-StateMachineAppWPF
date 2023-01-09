@@ -50,7 +50,6 @@ namespace ITP_StateMachine.ViewModels
 
         public PreviewViewModel()
         {
-            //device.ApplicationWatcher("IDTech Encrypted", "iTellerPlus.IDTechReader.exe", "0ACD|0500", events.OutputHandler);
             this._cardNumber = CardDetails.CardNumber;
             this._corpId = CardDetails.CorpId;
             prevCorpId = this._corpId;
@@ -62,8 +61,6 @@ namespace ITP_StateMachine.ViewModels
         }
         private void dispatcherTimer_Tick(object sender, EventArgs e)
         {
-            //Thread.Sleep(3000);
-            
             if (CardDetails.CardNumber != prevNumber)
             {
                 this.CardNumber = CardDetails.CardNumber;
