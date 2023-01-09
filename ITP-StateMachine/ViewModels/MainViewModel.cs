@@ -68,7 +68,7 @@ namespace ITP_StateMachine.ViewModels
             prevNumber = CardDetails.CardNumber;
 
             dispatcherTimer.Tick += dispatcherTimer_Tick;
-            dispatcherTimer.Interval = new TimeSpan(0, 0, 3);
+            dispatcherTimer.Interval = new TimeSpan(0, 0, 1);
             dispatcherTimer.Start();
         }
         private void dispatcherTimer_Tick(object sender, EventArgs e)
@@ -80,6 +80,7 @@ namespace ITP_StateMachine.ViewModels
             {
                 msmq.SendCommandQueue("Card swiped by user");
                 eventRecordManager.ReceiveCommand(null);
+                LogHelper.SendLogToText($"Card swiped by user\nCard details:\nCard Number: {CardDetails.CardNumber}\nCorp ID: {CardDetails.CorpId}");
             }
             prevNumber = CardNumber;
         }

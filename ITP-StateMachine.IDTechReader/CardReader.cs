@@ -101,8 +101,9 @@ namespace ITP_StateMachine.IDTechReader
                 CardDetails.CardNumber = e;
             }
             msmq.SendCommandQueue("Card swiped by user");
-            Thread.Sleep(2000);
-            msmq.SendHardwareQueue(CardDetails.CardNumber);
+
+            //Thread.Sleep(2000);
+            //msmq.SendHardwareQueue(CardDetails.CardNumber);
         }
 
         public void StatusConnected(object sender, bool isConnect)

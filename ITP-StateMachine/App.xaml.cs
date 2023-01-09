@@ -20,6 +20,7 @@ namespace ITP_StateMachine
     {
         MsmqHelper msmq = new MsmqHelper();
         EventRecordManager events = new EventRecordManager();
+        LogHelper log = new LogHelper();
         public static String[] arg;
         
         public App()
@@ -30,11 +31,13 @@ namespace ITP_StateMachine
         private void OnDispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
         {
             msmq.SendHardwareQueue($"{e.Exception.Message}");
+            LogHelper.SendLogToText("Exception message: " + e.Exception.Message);
         }
         protected override void OnStartup(StartupEventArgs e)
         {
             msmq.SendHardwareQueue($"Program initialize");
             events.ReceiveHardwareQueue();
+            LogHelper.SendLogToText($"Program initialize");
             ITP_StateMachine.IDTechReader.CardReader cardReader = new IDTechReader.CardReader(arg);
             cardReader.Show();
             Window window = new MainWindow();
@@ -45,6 +48,7 @@ namespace ITP_StateMachine
         private void Application_Exit(object sender, ExitEventArgs e)
         {
             msmq.SendCommandQueue("Program exit");
+            LogHelper.SendLogToText("Program exit");
             events.ReceiveCommand(null);
 
             foreach (var processes in Process.GetProcessesByName("iTellerPlus.IDTechReader"))
