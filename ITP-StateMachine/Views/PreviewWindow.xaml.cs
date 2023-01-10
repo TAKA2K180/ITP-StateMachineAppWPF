@@ -30,6 +30,7 @@ namespace ITP_StateMachine.Views
         TimeSpan time;
         EventRecordManager events = new EventRecordManager();
         MsmqHelper msmq = new MsmqHelper();
+        PreviewViewModel preview = new PreviewViewModel();
 
 
         public PreviewWindow()
@@ -37,12 +38,9 @@ namespace ITP_StateMachine.Views
             
             InitializeComponent();
 
-            DataContext = new PreviewViewModel();
-        }
-
-        private void Window_Closed(object sender, EventArgs e)
-        {
-            this.IsEnabled = false;
+            DataContext = preview;
+               
+            PreviewViewModel.CloseAction = new Action(Exit);
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -70,13 +68,18 @@ namespace ITP_StateMachine.Views
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            WindowChecker.WindowCheck = true;
-            CardDetails.CardNumber = "";
+            MainWindow instance = Application.Current.Windows.OfType<MainWindow>().SingleOrDefault();
+            if (instance == null)
+            {
+                MainWindow mainWindow = new MainWindow();
+                mainWindow.Show();
+            }
 
+            CardDetails.HardwareStatus = default;
+            CardDetails.CardNumber = default;
             msmq.SendHardwareQueue("Device search initialize");
             LogHelper.SendLogToText("Device search initialize");
             events.ReceiveHardwareQueue();
-
         }
         public void StartIdleTimer()
         {
@@ -85,6 +88,19 @@ namespace ITP_StateMachine.Views
             events.ReceiveTimerQueue(15, 0);
             msmq.SendCommandQueue("Preview window closed");
             LogHelper.SendLogToText("Preview window closed");
+        }
+
+        public void Exit()
+        {
+            this.Close();
+        }
+
+        private void Window_Closed(object sender, EventArgs e)
+        {
+            CardDetails.PrevCardNumber = null;
+            CardDetails.CardNumber = null;
+            CardDetails.PrevCardId = 0;
+            CardDetails.CorpId = 0;
         }
     }
 }

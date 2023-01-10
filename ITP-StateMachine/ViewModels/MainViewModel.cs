@@ -19,7 +19,8 @@ namespace ITP_StateMachine.ViewModels
     public class MainViewModel : BaseViewModel
     {
 
-        System.Windows.Threading.DispatcherTimer dispatcherTimer = new System.Windows.Threading.DispatcherTimer();
+        public System.Windows.Threading.DispatcherTimer dispatcherTimer = new System.Windows.Threading.DispatcherTimer();
+        System.Windows.Threading.DispatcherTimer deviceStatusTimer = new System.Windows.Threading.DispatcherTimer();
         MsmqHelper msmq = new MsmqHelper();
         EventRecordManager eventRecordManager = new EventRecordManager();
 
@@ -28,11 +29,19 @@ namespace ITP_StateMachine.ViewModels
         private string _cardNumber;
         private int _counter;
         private string prevNumber;
+        private bool prevDeviceStatus;
 
         public int Counter
         {
             get { return _counter; }
             set { _counter = value; }
+        }
+        private string _hardwareStatus;
+
+        public string HardwareStatus
+        {
+            get { return _hardwareStatus; }
+            set { _hardwareStatus = value; OnPropertyChanged(HardwareStatus); }
         }
 
 
@@ -52,46 +61,67 @@ namespace ITP_StateMachine.ViewModels
             set { CardDetails.CardNumber = value; OnPropertyChanged(CardNumber); }
         }
 
-        public event PropertyChangedEventHandler propertChanged;
-        private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
-        {
-            if (propertChanged != null)
-            {
-                propertChanged(this, new PropertyChangedEventArgs(propertyName));
-            }
-        }
+        public static Action CloseAction { get; set; }
+
         public MainViewModel()
         {
             LoadingVisibility = true;
 
+            this.HardwareStatus = CardDetails.HardwareStatus;
             this.CardNumber = CardDetails.CardNumber;
             prevNumber = CardDetails.CardNumber;
+            prevDeviceStatus = CardDetails.MachineState;
+            WindowChecker.WindowCheck = false;
 
-            dispatcherTimer.Tick += dispatcherTimer_Tick;
-            dispatcherTimer.Interval = new TimeSpan(0, 0, 1);
-            dispatcherTimer.Start();
+            
+
+            //deviceStatusTimer.Tick += deviceStatusTimer_Tick;
+            //deviceStatusTimer.Interval = new TimeSpan(0, 0, 5);
+            //deviceStatusTimer.Start();
         }
         private void dispatcherTimer_Tick(object sender, EventArgs e)
         {
-            PreviewWindow preview = new PreviewWindow();
-            //Thread.Sleep(3000);
             this.CardNumber = CardDetails.CardNumber;
-            if (CardNumber != prevNumber)
+            if (CardDetails.CardNumber != CardDetails.PrevCardNumber)
             {
                 msmq.SendCommandQueue("Card swiped by user");
-                eventRecordManager.ReceiveCommand(null);
+                eventRecordManager.ReceiveCommand();
                 LogHelper.SendLogToText($"Card swiped by user\nCard details:\nCard Number: {CardDetails.CardNumber}\nCorp ID: {CardDetails.CorpId}");
+                //msmq.DeleteMessages();
             }
             prevNumber = CardNumber;
+        }
+
+        private void deviceStatusTimer_Tick(object sender, EventArgs e)
+        {
+            if (CardDetails.MachineState != this.prevDeviceStatus)
+            {
+                msmq.SendHardwareQueue("Device search initialize");
+                eventRecordManager.ReceiveHardwareQueue();
+                this.CardNumber = CardDetails.CardNumber;
+                prevDeviceStatus = CardDetails.MachineState;
+            }
         }
 
         public void DataReceived(object sender, string e)
         {
             msmq.SendCommandQueue("Card finished reading");
-            eventRecordManager.ReceiveCommand(null);
+            eventRecordManager.ReceiveCommand();
 
             msmq.SendTimerQueue("Timer start");
             eventRecordManager.ReceiveTimerQueue(10,0);
+        }
+
+        public void Exit()
+        {
+            
+        }
+
+        public void OnLoad()
+        {
+            dispatcherTimer.Tick += dispatcherTimer_Tick;
+            dispatcherTimer.Interval = new TimeSpan(0, 0, 1);
+            dispatcherTimer.Start();
         }
     }
 }

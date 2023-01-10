@@ -8,7 +8,8 @@ namespace ITP_StateMachine.IDTechReader
 {
     public class CardDetails
     {
-        public static string CardNumber;
+        public static string CardNumber = default;
+        public static string HardwareStatus;
         public static int CorpId;
         public static bool MachineState;
         public static int counter = 0;
