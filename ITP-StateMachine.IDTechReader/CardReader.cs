@@ -38,9 +38,16 @@ namespace ITP_StateMachine.IDTechReader
             GetStartUp(arg);
             //CardPreview cardPreview = new CardPreview();
             //cardPreview.Show();
+
+            timer.Tick += new EventHandler(TimerEventProcessor);
+            timer.Interval = 5000;
+            timer.Start();
         }
         public void TimerEventProcessor(Object sender, EventArgs args)
         {
+        //    timer.Stop();
+        //    SetStatus();
+        //    timer.Start();
         }
         private void GetStartUp(string[] data)
         {
@@ -100,10 +107,7 @@ namespace ITP_StateMachine.IDTechReader
                 Console.WriteLine(e);
                 CardDetails.CardNumber = e;
             }
-            msmq.SendCommandQueue("Card swiped by user");
-
-            //Thread.Sleep(2000);
-            //msmq.SendHardwareQueue(CardDetails.CardNumber);
+            //msmq.SendCommandQueue("Card swiped by user");
         }
 
         public void StatusConnected(object sender, bool isConnect)
@@ -117,7 +121,6 @@ namespace ITP_StateMachine.IDTechReader
                 CardDetails.counter++;
                 StatusCheck();
             }
-            
         }
 
         public void StatusCheck()
@@ -133,13 +136,13 @@ namespace ITP_StateMachine.IDTechReader
             if (connectStatus.curStatus == false)
             {
                 CardDetails.MachineState = false;
-                CardDetails.CardNumber = "Device not detected.";
+                CardDetails.HardwareStatus = "Device not detected.";
                 msmq.SendHardwareQueue("Device not detected");
             }
             else if (connectStatus.curStatus == true)
             {
                 CardDetails.MachineState = true;
-                CardDetails.CardNumber = "Device online, please swipe your card.";
+                CardDetails.HardwareStatus = "Device online, please swipe your card.";
                 msmq.SendHardwareQueue("Device online");
             }
         }

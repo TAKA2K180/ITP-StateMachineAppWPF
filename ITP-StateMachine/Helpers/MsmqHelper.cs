@@ -155,5 +155,15 @@ namespace ITP_StateMachine.Helpers
 
             return messagebody;
         }
+
+        public void DeleteMessages()
+        {
+            string[] Queues = { ".\\Private$\\StateMachineCommandQueue", ".\\Private$\\statemachinetimerqueue", ".\\Private$\\statemachinehardwarequeue" };
+            foreach (var item in Queues)
+            {
+                MessageQueue queue = new MessageQueue(item);
+                queue.Purge();
+            }
+        }
     }
 }

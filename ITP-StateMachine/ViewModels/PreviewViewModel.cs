@@ -42,10 +42,12 @@ namespace ITP_StateMachine.ViewModels
             get { return _corpId; }
             set { _corpId = value; OnPropertyChanged("CorpId"); }
         }
+        public static Action CloseAction { get; set; }
 
         public RelayCommand LoadedEvent { get; set; }
         public RelayCommand CloseEvent { get; set; }
         public RelayCommand IdleTimerCommand { get; set; }
+        public RelayCommand CancelButton { get; set; }
 
 
         public PreviewViewModel()
@@ -54,6 +56,7 @@ namespace ITP_StateMachine.ViewModels
             this._corpId = CardDetails.CorpId;
             prevCorpId = this._corpId;
             prevNumber = this._cardNumber;
+            this.CancelButton = new RelayCommand(ExitCommand);
 
             dispatcherTimer.Tick += dispatcherTimer_Tick;
             dispatcherTimer.Interval = new TimeSpan(0, 0, 1);
@@ -67,6 +70,15 @@ namespace ITP_StateMachine.ViewModels
                 this.CorpId = CardDetails.CorpId;
             }
             prevNumber = CardNumber;
+        }
+
+        public void ExitCommand(dynamic obj)
+        {
+            msmq.DeleteMessages();
+            msmq.SendCommandQueue("Cancel button pressed by user");
+            LogHelper.SendLogToText("Cancel button pressed by user");
+            eventRecordManager.ReceiveCommand();
+            msmq.DeleteMessages();
         }
     }
 }

@@ -12,6 +12,9 @@ using ITP_StateMachine.IDTechReader;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.TaskbarClock;
 using System.Windows.Threading;
 using System.Windows.Media.Animation;
+using System.Windows;
+using ITP_StateMachine.ViewModels;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace ITP_StateMachine.Classes
 {
@@ -34,23 +37,27 @@ namespace ITP_StateMachine.Classes
         #endregion
 
         #region Methods
-        public void ReceiveCommand(string CardNumber)
+        public void ReceiveCommand()
         {
             var message = msmq.ReceiveCommandQueue();
 
             if (message.Contains("Card swiped by user"))
             {
+                MainViewModel main = new MainViewModel();
+                main.dispatcherTimer.Start();
                 if (CardDetails.PrevCardNumber != CardDetails.CardNumber)
                 {
-                    if (WindowChecker.WindowCheck == false)
+                    PreviewWindow instance = Application.Current.Windows.OfType<PreviewWindow>().SingleOrDefault();
+                    if (instance == null)
                     {
                         PreviewWindow preview = new PreviewWindow();
                         preview.Show();
+                        MainViewModel.CloseAction();
                         WindowChecker.WindowCheck = true;
+                        CardDetails.PrevCardNumber = CardDetails.CardNumber;
+                        CardDetails.PrevCardId = CardDetails.CorpId;
                     }
                 }
-                CardDetails.PrevCardNumber = CardDetails.CardNumber;
-                CardDetails.PrevCardId = CardDetails.CorpId;
             }
             else if (message.Contains("Card finished reading"))
             {
@@ -58,7 +65,19 @@ namespace ITP_StateMachine.Classes
             }
             else if (message.Contains("Program exit"))
             {
-
+                msmq.DeleteMessages();
+            }
+            else if (message.Contains("Cancel button pressed by user"))
+            {
+                PreviewViewModel.CloseAction.Invoke();
+                msmq.DeleteMessages();
+                msmq.SendCommandQueue("Preview window closed");
+                this.ReceiveCommand();
+            }
+            else if (message.Contains("Preview window closed"))
+            {
+                MainViewModel main = new MainViewModel();
+                msmq.DeleteMessages();
             }
         }
 
@@ -75,17 +94,16 @@ namespace ITP_StateMachine.Classes
             }
             else if (message.Contains("Program initialize") || message.Contains("Device search initialize"))
             {
-                //device.ApplicationWatcher("IDTech Encrypted", "iTellerPlus.IDTechReader.exe", "0ACD|0500", OutputHandler);
                 card.SetStatus();
                 if (CardDetails.MachineState == false)
                 {
-                    CardDetails.CardNumber = "Device not detected.";
+                    CardDetails.HardwareStatus = "Device not detected.";
                     msmq.SendHardwareQueue("Device not detected");
                     LogHelper.SendLogToText("Device not detected");
                 }
                 else if (CardDetails.MachineState == true)
                 {
-                    CardDetails.CardNumber = "Device online, please swipe your card.";
+                    CardDetails.HardwareStatus = "Device online, please swipe your card.";
                     msmq.SendHardwareQueue("Device online");
                     LogHelper.SendLogToText("Device online");
                 }
@@ -102,7 +120,7 @@ namespace ITP_StateMachine.Classes
             {
                 Thread.Sleep(millisecond);
                 msmq.SendCommandQueue("Device search initialize");
-                this.ReceiveCommand(null);
+                this.ReceiveCommand();
                 LogHelper.SendLogToText("Device search initialize");
             }
             else if (message.Contains("Idle timer start"))
@@ -110,22 +128,6 @@ namespace ITP_StateMachine.Classes
                 
             }
         }
-
-        public void TimerStop()
-        {
-            
-        }
-
-        public void OutputHandler(object sendingProcess, DataReceivedEventArgs outLine)
-        {
-            EventRecordManager events = new EventRecordManager();
-            MsmqHelper msmq = new MsmqHelper();
-            var details = outLine.Data;
-            CardDetails.CardNumber = details;
-            msmq.SendCommandQueue("Card swiped by user");
-            events.ReceiveCommand(details);
-            LogHelper.SendLogToText("Card swiped by user");
-        } 
         #endregion
     }
 }

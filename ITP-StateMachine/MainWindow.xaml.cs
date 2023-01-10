@@ -30,7 +30,20 @@ namespace ITP_StateMachine
         {
             InitializeComponent();
             DataContext = main;
+            if (MainViewModel.CloseAction == null)
+                MainViewModel.CloseAction = new Action(Exit);
+
         }
-        
+        public void Exit()
+        {
+            this.Close();
+            WindowChecker.WindowCheck = true;
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            MainViewModel mainViewModel = new MainViewModel();
+            mainViewModel.OnLoad();
+        }
     }
 }
