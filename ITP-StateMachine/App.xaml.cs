@@ -18,7 +18,7 @@ namespace ITP_StateMachine
     /// </summary>
     public partial class App : Application
     {
-        MsmqHelper msmq = new MsmqHelper();
+        SingleQueueHelper singleQueue = new SingleQueueHelper();
         EventRecordManager events = new EventRecordManager();
         public static String[] arg;
         
@@ -29,29 +29,28 @@ namespace ITP_StateMachine
 
         private void OnDispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
         {
-            msmq.SendHardwareQueue($"{e.Exception.Message}");
+            singleQueue.SendToQueue($"{e.Exception.Message}");
             LogHelper.SendLogToText("Exception message: " + e.Exception.Message);
         }
         protected override void OnStartup(StartupEventArgs e)
         {
-            msmq.DeleteMessages();
-            msmq.SendHardwareQueue($"Program initialize");
-            events.ReceiveHardwareQueue();
+            singleQueue.DeleteAllMessages();
+            singleQueue.SendToQueue($"Program initialize");
             LogHelper.SendLogToText($"Program initialize");
+            events.ReceiveQueue();
             //IDTechReader.CardReader cardReader = new IDTechReader.CardReader(arg);
             //cardReader.Show();
-            Window window = new MainWindow();
-            window.Show();
+            
             base.OnStartup(e);
         }
 
         private void Application_Exit(object sender, ExitEventArgs e)
         {
-            msmq.SendCommandQueue("Program exit");
+            singleQueue.SendToQueue("Program exit");
             LogHelper.SendLogToText("Program exit");
-            events.ReceiveCommand();
+            events.ReceiveQueue();
 
-            msmq.DeleteMessages();
+            singleQueue.DeleteAllMessages();
 
             foreach (var processes in Process.GetProcessesByName("iTellerPlus.IDTechReader"))
             {

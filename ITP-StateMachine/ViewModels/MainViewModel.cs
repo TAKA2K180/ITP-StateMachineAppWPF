@@ -21,7 +21,7 @@ namespace ITP_StateMachine.ViewModels
 
         public System.Windows.Threading.DispatcherTimer dispatcherTimer = new System.Windows.Threading.DispatcherTimer();
         System.Windows.Threading.DispatcherTimer deviceStatusTimer = new System.Windows.Threading.DispatcherTimer();
-        MsmqHelper msmq = new MsmqHelper();
+        SingleQueueHelper singleQueue = new SingleQueueHelper();
         EventRecordManager eventRecordManager = new EventRecordManager();
 
         private bool _deviceStatus;
@@ -71,7 +71,6 @@ namespace ITP_StateMachine.ViewModels
             this.CardNumber = CardDetails.CardNumber;
             prevNumber = CardDetails.CardNumber;
             prevDeviceStatus = CardDetails.MachineState;
-            WindowChecker.WindowCheck = false;
 
             
 
@@ -84,10 +83,9 @@ namespace ITP_StateMachine.ViewModels
             this.CardNumber = CardDetails.CardNumber;
             if (CardDetails.CardNumber != CardDetails.PrevCardNumber)
             {
-                msmq.SendCommandQueue("Card swiped by user");
-                eventRecordManager.ReceiveCommand();
-                LogHelper.SendLogToText($"Card swiped by user\nCard details:\nCard Number: {CardDetails.CardNumber}\nCorp ID: {CardDetails.CorpId}");
-                //msmq.DeleteMessages();
+                singleQueue.SendToQueue("Card swiped by user");
+                eventRecordManager.ReceiveQueue();
+                LogHelper.SendLogToText($"\nCard swiped by user\nCard details:\nCard Number: {CardDetails.CardNumber}\nCorp ID: {CardDetails.CorpId}\n");
             }
             prevNumber = CardNumber;
         }
@@ -96,8 +94,8 @@ namespace ITP_StateMachine.ViewModels
         {
             if (CardDetails.MachineState != this.prevDeviceStatus)
             {
-                msmq.SendHardwareQueue("Device search initialize");
-                eventRecordManager.ReceiveHardwareQueue();
+                singleQueue.SendToQueue("Device search initialize");
+                eventRecordManager.ReceiveQueue();
                 this.CardNumber = CardDetails.CardNumber;
                 prevDeviceStatus = CardDetails.MachineState;
             }
@@ -105,11 +103,11 @@ namespace ITP_StateMachine.ViewModels
 
         public void DataReceived(object sender, string e)
         {
-            msmq.SendCommandQueue("Card finished reading");
-            eventRecordManager.ReceiveCommand();
+            singleQueue.SendToQueue("Card finished reading");
+            eventRecordManager.ReceiveQueue();
 
-            msmq.SendTimerQueue("Timer start");
-            eventRecordManager.ReceiveTimerQueue(10,0);
+            singleQueue.SendToQueue("Timer start");
+            eventRecordManager.ReceiveQueue();
         }
 
         public void Exit()

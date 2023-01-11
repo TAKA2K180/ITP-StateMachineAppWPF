@@ -29,7 +29,7 @@ namespace ITP_StateMachine.Views
         DispatcherTimer dispatcherTimer;
         TimeSpan time;
         EventRecordManager events = new EventRecordManager();
-        MsmqHelper msmq = new MsmqHelper();
+        SingleQueueHelper singleQueue = new SingleQueueHelper();
         PreviewViewModel preview = new PreviewViewModel();
 
 
@@ -52,7 +52,6 @@ namespace ITP_StateMachine.Views
             dispatcherTimer.Interval = TimeSpan.FromSeconds(1);
             dispatcherTimer.Tick += DispatcherTimer_Tick;
             dispatcherTimer.Start();
-            WindowChecker.WindowCheck = true;
         }
         private void DispatcherTimer_Tick(object sender, EventArgs e)
         {
@@ -73,21 +72,18 @@ namespace ITP_StateMachine.Views
             {
                 MainWindow mainWindow = new MainWindow();
                 mainWindow.Show();
+                //singleQueue.SendToQueue("Main window show");
+                //LogHelper.SendLogToText("Main window show");
             }
 
-            CardDetails.HardwareStatus = default;
-            CardDetails.CardNumber = default;
-            msmq.SendHardwareQueue("Device search initialize");
-            LogHelper.SendLogToText("Device search initialize");
-            events.ReceiveHardwareQueue();
+            
         }
         public void StartIdleTimer()
         {
-            msmq.SendTimerQueue("Idle timer start");
+            singleQueue.SendToQueue("Idle timer start");
             LogHelper.SendLogToText("Idle timer start");
-            events.ReceiveTimerQueue(15, 0);
-            msmq.SendCommandQueue("Preview window closed");
-            LogHelper.SendLogToText("Preview window closed");
+            events.ReceiveQueue();
+            singleQueue.SendToQueue("Preview window closed");
         }
 
         public void Exit()

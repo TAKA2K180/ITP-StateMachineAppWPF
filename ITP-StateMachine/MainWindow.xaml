@@ -7,7 +7,7 @@
         xmlns:local="clr-namespace:ITP_StateMachine"
         xmlns:viewmodel ="clr-namespace:ITP_StateMachine.ViewModels"
         mc:Ignorable="d"
-        Title="MainWindow" FontFamily="Cascadia Mono" Height="450" Width="800" WindowStartupLocation="CenterScreen" Background="#213038" Loaded="Window_Loaded">
+        Title="Card Tester App" FontFamily="Cascadia Mono" Height="450" Width="800" WindowStartupLocation="CenterScreen" Background="#213038" Loaded="Window_Loaded">
     <Grid>
         <!--<Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
