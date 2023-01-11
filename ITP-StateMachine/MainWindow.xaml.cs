@@ -37,7 +37,6 @@ namespace ITP_StateMachine
         public void Exit()
         {
             this.Close();
-            WindowChecker.WindowCheck = true;
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)

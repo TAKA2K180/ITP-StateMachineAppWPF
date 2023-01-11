@@ -23,7 +23,7 @@ namespace ITP_StateMachine.Helpers
                     Directory.CreateDirectory(filepath);
                 }
 
-                filepath = filepath + DateTime.Today.ToString("dd-MM-yy") + ".txt";   //Text File Name
+                filepath = filepath + DateTime.Today.ToString("dd-MM-yy") + ".log";   //Text File Name
 
                 if (!File.Exists(filepath))
                 {

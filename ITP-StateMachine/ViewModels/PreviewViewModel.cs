@@ -20,7 +20,7 @@ namespace ITP_StateMachine.ViewModels
     public class PreviewViewModel : BaseViewModel
     {
         System.Windows.Threading.DispatcherTimer dispatcherTimer = new System.Windows.Threading.DispatcherTimer();
-        MsmqHelper msmq = new MsmqHelper();
+        SingleQueueHelper singleQueue = new SingleQueueHelper();
         EventRecordManager eventRecordManager = new EventRecordManager();
 
 
@@ -68,17 +68,17 @@ namespace ITP_StateMachine.ViewModels
             {
                 this.CardNumber = CardDetails.CardNumber;
                 this.CorpId = CardDetails.CorpId;
+                prevNumber = CardNumber;
             }
-            prevNumber = CardNumber;
         }
 
         public void ExitCommand(dynamic obj)
         {
-            msmq.DeleteMessages();
-            msmq.SendCommandQueue("Cancel button pressed by user");
+            singleQueue.DeleteAllMessages();
+            singleQueue.SendToQueue("Cancel button pressed by user");
             LogHelper.SendLogToText("Cancel button pressed by user");
-            eventRecordManager.ReceiveCommand();
-            msmq.DeleteMessages();
+            eventRecordManager.ReceiveQueue();
+            singleQueue.DeleteAllMessages();
         }
     }
 }
